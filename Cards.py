@@ -29,6 +29,7 @@ class CardDeck(object):
     def deal(self, num=1):
         # returns a list with the requested number of cards
         # if you attempt to deal from an empty deck, it will reshuffle to deck for you
+
         res = []
         for x in range(num):
             try:
