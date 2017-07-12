@@ -22,7 +22,7 @@ class Game(object):
             """
             After this method:
                 self.players = list of players
-                self.players[player] = list of cards which is that player's hand
+                self.players[player] = list of cards in that player's hand
             """
 
             # Create list of players
@@ -32,21 +32,24 @@ class Game(object):
             for x in range(2):
                 self.players[player].append(self.cards.deal())
 
-    def hit(self):
-        # def turn instead?
-        # TODO
-        pass
+    def hit(self, hand):
+        # hand passed should be a list of cards
+        # TODO: test
+        hand.append(self.cards.deal(1))
+        return hand
 
-    # TODO: separate into hand object? (then overwrite what I think is __sum__?)
     @staticmethod
     def sum_hand(hand):
         res = 0
+
+        # Used below to track A's counting for 1 or 11
+        num_aces = 0
 
         # Get each card
         for card in hand:
 
             # Card object is ('suit', #)
-            x = card(1)
+            x = card[1]
 
             # handle 2-10
             if type(x) == int:
@@ -56,20 +59,15 @@ class Game(object):
                 if x == 'J' or x == 'Q' or x == 'K':
                     res += 10
                 elif x == 'A':
-                    # Can only be 1 if 11 makes hand bust
-                    if res + 11 > 21:
-                        res += 1
-                    else:
-                        # TODO
-                        pass
+                    res += 11
+                    num_aces += 1
+
+        # Makes A's count for only 1 if hand otherwise will bust
+        while num_aces > 0 and res > 21:
+            res -= 10
+            num_aces -= 1
 
         return res
-
-    # TODO: move into hand class if refactored to such
-    @staticmethod
-    def bust(self):
-        # TODO
-        pass
 
     def play_round(self, players=1, reshuffle=True):
         self.deal(players=players, reshuffle=reshuffle)
@@ -77,28 +75,24 @@ class Game(object):
         for player in self.players:
             hand = self.players[player]
 
-            # fixme: handle dealer's hand
+            # TODO: handle dealer's hand
+            # TODO: gather bets
 
             # Stay on this player until pass or bust
             while True:
                 this_sum = sum(hand)
-                if this_sum > 21:
-                    Game.bust()
+                if this_sum >= 21:
                     break
-                elif this_sum == 21:
-                    # TODO: implement blackjack
-                    pass
                 elif this_sum < 21:
                     # TODO: option to hit or stand
                     pass
 
-                # TODO...need to do anything else?
-                pass
-
-            # TODO
-            pass
+        # TODO: resolve hands
 
 
 class Player(object):
-    # TODO
-    pass
+
+    def __init__(self, money=100):
+        hand_resolved = False
+        bet = 0
+        self.money = money
