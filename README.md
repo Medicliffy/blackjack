@@ -1,4 +1,2 @@
 # blackjack
-Simple Python Blackjack
-
-Implements a simple blackjack game in Python.
+Implements a simple text-based blackjack game in Python.
